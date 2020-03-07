@@ -14,25 +14,16 @@ pipeline {
     agent any
 
 	tools {
-		jdk "Java-1.8"
+		jdk "Java8"
 		maven "Maven-3.5.3"
 	}
 
     stages {
         stage('Clone sources'){
             steps {
-                git url: 'https://github.com/Anusha-DevOp/web_ex'
+                git url: 'https://github.com/sandeepk17/web_ex.git'
             }
         }
-
-     	stage('SonarQube analysis') {
-	     steps {
-		//Prepare SonarQube scanner enviornment
-		withSonarQubeEnv('SonarQube6.3') {
-		   bat 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar'
-		}
-	      }
-	}
 
 //	stage('Quality Gate') {
 //		steps {
