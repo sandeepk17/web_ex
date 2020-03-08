@@ -1,6 +1,6 @@
 // Obtaining an Artifactory server instance defined in Jenkins:
 			
-def server = Artifactory.server 'Artifactory Version 4.15.0'
+def server = Artifactory.server 'Artifactory'
 
 		 //If artifactory is not defined in Jenkins, then create on:
 		// def server = Artifactory.newServer url: 'Artifactory url', username: 'username', password: 'password'
@@ -11,12 +11,12 @@ def rtMaven = Artifactory.newMavenBuild()
 def buildInfo
 
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.5.0-jdk-8-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
+    agent any
+
+	tools {
+		jdk "jdk8"
+		maven "myMaven"
+	}
 
     stages {
         stage('Clone sources'){
@@ -24,6 +24,15 @@ pipeline {
                 git url: 'https://github.com/sandeepk17/web_ex.git'
             }
         }
+
+     	stage('SonarQube analysis') {
+	     steps {
+		//Prepare SonarQube scanner enviornment
+		withSonarQubeEnv('SonarQube6.3') {
+		   bat 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar'
+		}
+	      }
+	}
 
 //	stage('Quality Gate') {
 //		steps {
@@ -40,13 +49,13 @@ pipeline {
 		
 	   steps {
 		script {
-			rtMaven.tool = 'maven3.6' //Maven tool name specified in Jenkins configuration
+			rtMaven.tool = 'Maven-3.5.3' //Maven tool name specified in Jenkins configuration
 		
 			rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server //Defining where the build artifacts should be deployed to
 			
 			rtMaven.resolver releaseRepo:'libs-release', snapshotRepo: 'libs-snapshot', server: server //Defining where Maven Build should download its dependencies from
 			
-			//rtMaven.deployer.artifactDeploymentPatterns.addExclude("pom.xml") //Exclude artifacts from being deployed
+			rtMaven.deployer.artifactDeploymentPatterns.addExclude("pom.xml") //Exclude artifacts from being deployed
 			
 			//rtMaven.deployer.deployArtifacts =false // Disable artifacts deployment during Maven run
 		    
