@@ -14,8 +14,8 @@ pipeline {
     agent any
 
 	tools {
-		jdk "jdk8"
-		maven "myMaven"
+		jdk "jdk"
+		maven "maven3"
 	}
 
     stages {
@@ -49,7 +49,7 @@ pipeline {
 		
 	   steps {
 		script {
-			rtMaven.tool = 'myMaven' //Maven tool name specified in Jenkins configuration
+			rtMaven.tool = 'maven3' //Maven tool name specified in Jenkins configuration
 		
 			rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server //Defining where the build artifacts should be deployed to
 			
