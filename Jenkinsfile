@@ -1,6 +1,6 @@
 // Obtaining an Artifactory server instance defined in Jenkins:
 			
-def server = Artifactory.server 'Artifactory'
+def server = Artifactory.server 'Artifactory1'
 
 		 //If artifactory is not defined in Jenkins, then create on:
 		// def server = Artifactory.newServer url: 'Artifactory url', username: 'username', password: 'password'
@@ -14,7 +14,7 @@ pipeline {
     agent any
 
 	tools {
-		jdk "jdk"
+		jdk "jdk8"
 		maven "maven3"
 	}
 
@@ -24,26 +24,6 @@ pipeline {
                 git url: 'https://github.com/sandeepk17/web_ex.git'
             }
         }
-
-     	stage('SonarQube analysis') {
-	     steps {
-		//Prepare SonarQube scanner enviornment
-		withSonarQubeEnv('sonarserver') {
-		   bat 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:4.2.0.1873:sonar'
-		}
-	      }
-	}
-
-//	stage('Quality Gate') {
-//		steps {
-//			timeout(time: 1, unit: 'HOURS') {
-			//Parameter indicates wether to set pipeline to UNSTABLE if Quality Gate fails
-		        // true = set pipeline to UNSTABLE, false = don't
-			// Requires SonarQube Scanner for Jenkins 2.7+
-//			waitForQualityGate abortPipeline: false
-//		       }
-//		 }
-//	}
 
 	stage('Artifactory configuration') {
 		
