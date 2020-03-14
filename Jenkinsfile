@@ -35,7 +35,7 @@ pipeline {
 			
 			rtMaven.resolver releaseRepo:'libs-release', snapshotRepo: 'libs-snapshot', server: server //Defining where Maven Build should download its dependencies from
 			
-			rtMaven.deployer.artifactDeploymentPatterns.addExclude("pom.xml") //Exclude artifacts from being deployed
+			//rtMaven.deployer.artifactDeploymentPatterns.addExclude("pom.xml") //Exclude artifacts from being deployed
 			
 			//rtMaven.deployer.deployArtifacts =false // Disable artifacts deployment during Maven run
 		    
